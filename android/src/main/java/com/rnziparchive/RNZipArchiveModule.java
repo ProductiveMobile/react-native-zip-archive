@@ -14,7 +14,6 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.nio.file.Paths;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -305,7 +304,8 @@ public class RNZipArchiveModule extends ReactContextBaseJavaModule {
 
         if (!new File(absoluteFilepath).isDirectory()) {
           FileInputStream fi = new FileInputStream(absoluteFilepath);
-          String filename = Paths.get(fromDirectory).relativize(Paths.get(absoluteFilepath)).toString();
+          String filename = absoluteFilepath.replace(fromDirectory, "");
+          filename = filename.startsWith("/") ? filename.substring(1) : filename;
           ZipEntry entry = new ZipEntry(filename);
           out.putNextEntry(entry);
           origin = new BufferedInputStream(fi, BUFFER_SIZE);
